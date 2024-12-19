@@ -42,10 +42,9 @@ def predict_image_classification_sample(
         endpoint=endpoint, instances=instances, parameters=parameters
     )
 
-    # Convert to a regular Python dict using the built-in method
+    # Convert to a regular Python dict (dealing with protobufs here)
     predictions = [dict(prediction) for prediction in response.predictions]
 
-    # The predictions are now regular Python dicts with lists
     for pred in predictions:
         pred['confidences'] = list(pred['confidences'])
         pred['displayNames'] = list(pred['displayNames'])
@@ -60,6 +59,6 @@ if __name__ == "__main__":
         location=LOCATION,
         endpoint_id=ENDPOINT_ID
     )
-    
-    # Now we can safely serialize to JSON
+
+
     print(json.dumps(predictions, indent=2))

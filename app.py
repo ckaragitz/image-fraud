@@ -31,7 +31,7 @@ async def analyze_fraud(request: ImageRequest):
     try:
         logger.info(f"Received request for analysis type: {request.analysis_type}")
 
-        # Perform analysis
+        # Perform analysis by sending the base64 encoded image and analysis type (web search, EXIF metadata, or classification)
         response = analyzer.analyze(
             base64_content=request.source,
             analysis_type=request.analysis_type

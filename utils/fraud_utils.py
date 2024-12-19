@@ -30,6 +30,7 @@ class ImageAnalyzer:
 
     @property
     def vision_client(self):
+        # We only want to do this once per user (obviously there is no user mgmt happening in this API but it's a best practice)
         if not self._vision_client:
             try:
                 self._vision_client = vision.ImageAnnotatorClient()
@@ -41,6 +42,7 @@ class ImageAnalyzer:
 
     @property
     def vertex_client(self):
+        # We only want to do this once per user (obviously there is no user mgmt happening in this API but it's a best practice)
         if not self._vertex_client:
             try:
                 self._vertex_client = aiplatform.gapic.PredictionServiceClient(
@@ -59,7 +61,7 @@ class ImageAnalyzer:
             cleaned_string = base64_string.replace('\n', '').replace('\r', '').strip()
             image_data = base64.b64decode(cleaned_string)
 
-            # Check file size
+            # Check file size as it can't be larger than 1.5MB
             size = len(image_data)
             logger.info(f"Image size: {size} bytes")
             if size > VisionConfig.MAX_IMAGE_SIZE:
@@ -184,14 +186,14 @@ class ImageAnalyzer:
         """Main analysis method."""
         try:
             logger.info(f"Starting analysis of type: {analysis_type}")
-            
+
             # Validate image first
             image_data, pil_image = self.validate_image(base64_content)
 
             analysis_methods = {
-                'web_search': lambda: self.process_web_detection(image_data),
-                'classification': lambda: self.classify_image(base64_content),
-                'exif': lambda: self.analyze_exif(pil_image)
+                'web_search': lambda: self.process_web_detection(image_data), # Notice we're using the decoded image data
+                'classification': lambda: self.classify_image(base64_content), # Notice we're using the original base64 string from the initial request
+                'exif': lambda: self.analyze_exif(pil_image) # Notice w'ere using a PIL object
             }
 
             if analysis_type not in analysis_methods:
@@ -200,10 +202,10 @@ class ImageAnalyzer:
             result = analysis_methods[analysis_type]()
             logger.info(f"Analysis completed successfully for type: {analysis_type}")
             return result
-            
+
         except Exception as e:
             logger.error(f"Analysis failed: {e}")
             raise
 
-# Create a singleton instance
+# Create a singleton instance of our analyzer
 analyzer = ImageAnalyzer()
