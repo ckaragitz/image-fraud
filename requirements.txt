@@ -1,0 +1,11 @@
+fastapi
+uvicorn[standard]
+requests
+google-cloud-vision
+google-cloud-aiplatform
+pydantic
+Pillow
+vertexai
+piexif
+orjson
+protobuf
