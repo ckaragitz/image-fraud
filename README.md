@@ -1,6 +1,6 @@
 # Image Fraud Detection API
 
-A FastAPI-based service that provides comprehensive image analysis capabilities including fraud detection, EXIF metadata analysis, and image classification using Google Cloud Vision API and Vertex AI.
+A FastAPI-based service that provides comprehensive image analysis capabilities including web search detection, EXIF metadata analysis, and image classification using Google Cloud Vision API and Vertex AI.
 
 ## Features
 
